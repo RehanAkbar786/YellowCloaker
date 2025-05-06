@@ -16,4 +16,4 @@ WORKDIR /var/www/html/
 EXPOSE 8000
 
 # Start PHP server
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "."]
