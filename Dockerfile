@@ -1,8 +1,10 @@
 # Use the official PHP image
 FROM php:8.0-apache
 
-# Install necessary PHP extensions
-RUN docker-php-ext-install pdo pdo_pgsql
+# Install necessary dependencies
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql
 
 # Copy application code to the container
 COPY . /var/www/html/
