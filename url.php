@@ -3,9 +3,8 @@ require_once __DIR__.'/settings.php';
 require_once __DIR__.'/cookies.php';
 require_once __DIR__.'/pixels.php';
 
-//заменяем все макросы на реальные значения из куки
-function replace_all_macros($url)
-{
+// Replace all macros
+function replace_all_macros($url) {
     global $fbpixel_subname;
     $px = get_fbpixel();
     $landing = get_cookie('landing');
@@ -20,38 +19,38 @@ function replace_all_macros($url)
     return $tmp_url;
 }
 
-function add_querystring($url)
-{
-    $delimiter= (strpos($url, '?')===false?"?":"&");
-    $querystr = $_SERVER['QUERY_STRING'];
+// Add query string to URL
+function add_querystring($url) {
+    $delimiter = (strpos($url, '?') === false ? "?" : "&");
+    $querystr = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : ''; // Safely handle QUERY_STRING
     if (!empty($querystr)) {
-        $url = $url.$delimiter.$querystr;
+        $url = $url . $delimiter . $querystr;
     }
     return $url;
 }
 
-function add_subs_to_link($url)
-{
+// Add subs to link
+function add_subs_to_link($url) {
     global $sub_ids;
-    $preset=['subid','prelanding','landing'];
+    $preset = ['subid', 'prelanding', 'landing'];
     foreach ($sub_ids as $sub) {
-    	$key = $sub["name"];
+        $key = $sub["name"];
         $value = $sub["rewrite"];
-        $delimiter= (strpos($url, '?')===false?"?":"&");
-        if (in_array($key,$preset)){
+        $delimiter = (strpos($url, '?') === false ? "?" : "&");
+        if (in_array($key, $preset)) {
             $cookie = get_cookie($key);
-            if ($cookie!=='')
-                $url.= $delimiter.$value.'='.$cookie;
+            if ($cookie !== '') {
+                $url .= $delimiter . $value . '=' . $cookie;
+            }
         } elseif (!empty($_GET[$key])) {
-            $url.= $delimiter.$value.'='.$_GET[$key];
+            $url .= $delimiter . $value . '=' . $_GET[$key];
         }
     }
     return $url;
 }
 
-
-function replace_subs_in_link($url)
-{
+// Replace subs in link
+function replace_subs_in_link($url) {
     global $sub_ids;
     $preset = ['subid', 'prelanding', 'landing'];
 
@@ -73,8 +72,9 @@ function replace_subs_in_link($url)
         } elseif (in_array($key, $preset)) {
             // Set from cookie if not in query string
             $cookie = get_cookie($key);
-            if ($cookie!=='')
+            if ($cookie !== '') {
                 $query_array[$value] = $cookie;
+            }
         }
     }
 
@@ -86,9 +86,9 @@ function replace_subs_in_link($url)
     if (isset($url_components['path'])) {
         $new_url .= $url_components['path'];
     }
-    
+
     if (isset($url_components['fragment'])) {
-        $new_url .= '#'.$url_components['fragment'];
+        $new_url .= '#' . $url_components['fragment'];
     }
 
     if ($new_query) {
@@ -97,4 +97,3 @@ function replace_subs_in_link($url)
 
     return $new_url;
 }
-?>
