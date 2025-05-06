@@ -1,4 +1,6 @@
 <?php
+ob_start(); // Start output buffering
+
 // Enable debugging
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', 1);
@@ -59,4 +61,6 @@ if ($use_js_checks === true) {
         return;
     }
 }
+
+ob_end_flush(); // Send the output buffer
 ?>
